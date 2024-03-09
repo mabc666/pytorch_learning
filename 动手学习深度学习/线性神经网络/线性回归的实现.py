@@ -24,10 +24,13 @@ plt.show()
 
 # 读取数据集
 # yield表示获取一次就返回
+# batch_size 表示每次返回多少数据
 def data_iter(batch_size, features, labels):
     num_examples = len(features)
     indices = list(range(num_examples))
+    # 随机打乱序号
     random.shuffle(indices)
+    # 每次调用就给出10个
     for i in range(0, num_examples, batch_size):
         batch_indices = torch.tensor(indices[i: min(i + batch_size, num_examples)])
         yield features[batch_indices], labels[batch_indices]
@@ -37,7 +40,7 @@ for X, y in data_iter(batch_size, features, labels):
     print(X, '\n', y)
     break
 
-# 初始化模型参数
+# 随机初始化模型参数
 w = torch.normal(0,1,(2,1),requires_grad=True)
 b = torch.zeros(1, requires_grad=True)
 
@@ -50,6 +53,7 @@ def squared_loss(y_hat, y):
     return (y_hat - y.reshape(y_hat.shape)) ** 2 / 2
 
 # 定义优化算法
+# 每次计算完梯度将梯度清0
 def sgd(params, lr, batch_size):
     with torch.no_grad():
         for param in params:
@@ -63,9 +67,11 @@ loss = squared_loss
 
 for epoch in range(num_epochs):
     for X, y in data_iter(batch_size, features, labels):
+        # 计算每个批次的损失
         l = loss(net(X, w, b), y)  # X和y的小批量损失
         # 因为l形状是(batch_size,1)，而不是一个标量。l中的所有元素被加到一起，
         # 并以此计算关于[w,b]的梯度
+        # backward()求梯度
         l.sum().backward()
         sgd([w, b], lr, batch_size)  # 使用参数的梯度更新参数
     with torch.no_grad():
