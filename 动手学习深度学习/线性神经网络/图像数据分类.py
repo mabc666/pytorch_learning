@@ -7,6 +7,7 @@ import numpy as np
 from d2l import torch as d2l
 from IPython import display
 import matplotlib as plt
+
 # 通过ToTensor实例将图像数据从PIL类型变换成32位浮点数格式，
 # 并除以255使得所有像素的数值均在0～1之间
 trans = transforms.ToTensor()

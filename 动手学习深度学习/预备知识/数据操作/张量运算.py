@@ -18,5 +18,13 @@ print(torch.cat((k,q),dim=1))
 # 张量比较
 print(k==q)
 
+
 # 张量求和
 print(k.sum())
+
+# 求最大值下标
+print('max')
+max = torch.randn(10).reshape(2,5)
+print(max)
+max = max.argmax(axis = 1)
+print(max)
